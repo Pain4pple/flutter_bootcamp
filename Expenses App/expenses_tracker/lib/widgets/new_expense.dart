@@ -45,9 +45,9 @@ class _NewExpenseState extends State<NewExpense> {
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
       if (_selectedDate == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please select a date')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Please select a date')));
         return;
       }
       print("Title: ${_titleController.text}");
@@ -63,9 +63,9 @@ class _NewExpenseState extends State<NewExpense> {
           category: _selectedCategory,
         ),
       );
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Processing Data')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Processing Data')));
 
       Navigator.pop(context);
     }
@@ -73,108 +73,231 @@ class _NewExpenseState extends State<NewExpense> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-        padding: const EdgeInsets.fromLTRB(20,48,20,20),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _titleController,
-                keyboardType: TextInputType.text,
-                maxLength: 50,
-                decoration: const InputDecoration(label: Text('Title')),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter some text';
-                  }
-                  return null;
-                },
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      controller: _amountController,
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        prefix: Text('\$ '),
-                        label: Text('Amount'),
+    final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
+    return LayoutBuilder(
+      builder: (ctx, constraints) {
+        final width = constraints.maxWidth;
+
+        return Padding(
+          padding: EdgeInsets.fromLTRB(20, 20, 20, keyboardSpace + 16),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                if (width >= 600)
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          controller: _titleController,
+                          keyboardType: TextInputType.text,
+                          decoration: const InputDecoration(
+                            label: Text('Title'),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter some text';
+                            }
+                            return null;
+                          },
+                        ),
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter an amount';
-                        } else if (double.tryParse(value) == null ||
-                            double.tryParse(value)! <= 0) {
-                          return 'Please enter a valid amount';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 16,
-                  ),
-                  Expanded(
-                    child: TextFormField(
-                      readOnly: true,
-                      decoration: InputDecoration(
-                        labelText: 'Select Date',
-                        suffixIcon: const Icon(Icons.calendar_today),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: TextFormField(
+                          controller: _amountController,
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(
+                            prefix: Text('\$ '),
+                            label: Text('Amount'),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter an amount';
+                            } else if (double.tryParse(value) == null ||
+                                double.tryParse(value)! <= 0) {
+                              return 'Please enter a valid amount';
+                            }
+                            return null;
+                          },
+                        ),
                       ),
-                      controller: TextEditingController(
-                        text: _selectedDate == null
-                            ? ''
-                            : formatter.format(_selectedDate!),
-                      ),
-                      onTap: _openDatePicker,
-                      validator: (value) {
-                        if (_selectedDate == null) {
-                          return 'Please select a date';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: DropdownButtonFormField(
-                      value: _selectedCategory,
-                      items: expenseModel.Category.values
-                          .map(
-                            (category) => DropdownMenuItem(
-                              value: category,
-                              child: Text(category.name.toString()),
-                            ),
-                          )
-                          .toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedCategory = value!;
-                        });
-                      },
-                      validator: (value) =>
-                          value == null ? 'Please select a category' : null,
-                    ),
-                  ),
-                  const Spacer(),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
+                    ],
+                  )
+                else
+                  TextFormField(
+                    controller: _titleController,
+                    keyboardType: TextInputType.text,
+                    decoration: const InputDecoration(label: Text('Title')),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter some text';
+                      }
+                      return null;
                     },
-                    child: const Text('Cancel'),
                   ),
-                  ElevatedButton(
-                    onPressed: _submitForm,
-                    child: const Text('Save Record'),
+
+                if (width >= 600)
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          readOnly: true,
+                          decoration: InputDecoration(
+                            labelText: 'Select Date',
+                            suffixIcon: const Icon(Icons.calendar_today),
+                          ),
+                          controller: TextEditingController(
+                            text:
+                                _selectedDate == null
+                                    ? ''
+                                    : formatter.format(_selectedDate!),
+                          ),
+                          onTap: _openDatePicker,
+                          validator: (value) {
+                            if (_selectedDate == null) {
+                              return 'Please select a date';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: DropdownButtonFormField(
+                          value: _selectedCategory,
+                          items:
+                              expenseModel.Category.values
+                                  .map(
+                                    (category) => DropdownMenuItem(
+                                      value: category,
+                                      child: Text(category.name.toString()),
+                                    ),
+                                  )
+                                  .toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedCategory = value!;
+                            });
+                          },
+                          validator:
+                              (value) =>
+                                  value == null
+                                      ? 'Please select a category'
+                                      : null,
+                        ),
+                      ),
+                    ],
+                  )
+                else
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          controller: _amountController,
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(
+                            prefix: Text('\$ '),
+                            label: Text('Amount'),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter an amount';
+                            } else if (double.tryParse(value) == null ||
+                                double.tryParse(value)! <= 0) {
+                              return 'Please enter a valid amount';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: TextFormField(
+                          readOnly: true,
+                          decoration: InputDecoration(
+                            labelText: 'Select Date',
+                            suffixIcon: const Icon(Icons.calendar_today),
+                          ),
+                          controller: TextEditingController(
+                            text:
+                                _selectedDate == null
+                                    ? ''
+                                    : formatter.format(_selectedDate!),
+                          ),
+                          onTap: _openDatePicker,
+                          validator: (value) {
+                            if (_selectedDate == null) {
+                              return 'Please select a date';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ],
+                const SizedBox(height: 15,),
+                if (width >= 600)
+                Row(
+                  children: [
+                    const Spacer(),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('Cancel'),
+                    ),
+                    ElevatedButton(
+                      onPressed: _submitForm,
+                      child: const Text('Save Record'),
+                    ),
+                  ],
+                )
+                else
+                Row(
+                  children: [
+                    Expanded(
+                      child: DropdownButtonFormField(
+                        value: _selectedCategory,
+                        items:
+                            expenseModel.Category.values
+                                .map(
+                                  (category) => DropdownMenuItem(
+                                    value: category,
+                                    child: Text(category.name.toString()),
+                                  ),
+                                )
+                                .toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedCategory = value!;
+                          });
+                        },
+                        validator:
+                            (value) =>
+                                value == null
+                                    ? 'Please select a category'
+                                    : null,
+                      ),
+                    ),
+                    const Spacer(),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('Cancel'),
+                    ),
+                    ElevatedButton(
+                      onPressed: _submitForm,
+                      child: const Text('Save Record'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-        ));
+        );
+      },
+    );
   }
 }
