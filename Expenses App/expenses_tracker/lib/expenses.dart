@@ -1,6 +1,7 @@
 import 'package:expenses_tracker/widgets/chart/chart.dart';
 import 'package:expenses_tracker/widgets/expenses_list/expenses_list.dart';
 import 'package:expenses_tracker/widgets/new_expense.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'models/expense.dart';
@@ -29,7 +30,12 @@ class _ExpensesState extends State<Expenses> {
   ];
 
   void _openModal() {
+    // showCupertinoModalPopup(
+    //   context: context,
+    //   builder: (ctx) => NewExpense(onAddExpense: _addExpense),
+    // );
     showModalBottomSheet(
+      useSafeArea: true,
       context: context,
       builder: (ctx) => NewExpense(onAddExpense: _addExpense),
     );
@@ -79,29 +85,30 @@ class _ExpensesState extends State<Expenses> {
       ),
       body: Container(
         margin: EdgeInsets.all(15.0),
-        child: width < 600 
-        ? Column(
-          children: [
-            Chart(expenses: _registeredExpenses),
-            Expanded(
-              child: ExpensesList(
-                expenses: _registeredExpenses,
-                onRemoveExpense: _removeExpense,
-              ),
-            ),
-          ],
-        ) : 
-        Row(
-          children: [
-            Expanded(child: Chart(expenses: _registeredExpenses),),
-            Expanded(
-              child: ExpensesList(
-                expenses: _registeredExpenses,
-                onRemoveExpense: _removeExpense,
-              ),
-            ),
-          ],
-        ),
+        child:
+            width < 600
+                ? Column(
+                  children: [
+                    Chart(expenses: _registeredExpenses),
+                    Expanded(
+                      child: ExpensesList(
+                        expenses: _registeredExpenses,
+                        onRemoveExpense: _removeExpense,
+                      ),
+                    ),
+                  ],
+                )
+                : Row(
+                  children: [
+                    Expanded(child: Chart(expenses: _registeredExpenses)),
+                    Expanded(
+                      child: ExpensesList(
+                        expenses: _registeredExpenses,
+                        onRemoveExpense: _removeExpense,
+                      ),
+                    ),
+                  ],
+                ),
       ),
     );
   }
