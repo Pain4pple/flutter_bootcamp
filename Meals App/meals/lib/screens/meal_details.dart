@@ -24,11 +24,24 @@ class MealDetailsScreen extends ConsumerWidget {
                   .read(favoriteMealsProvider.notifier)
                   .toggleFavoriteStatus(meal);
               ScaffoldMessenger.of(context).clearSnackBars();
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text(wasAdded ? 'Added to favorites' : 'Removed from favorites')));
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    wasAdded ? 'Added to favorites' : 'Removed from favorites',
+                  ),
+                ),
+              );
             },
-            icon: Icon(starStatus),
+            icon: AnimatedSwitcher(
+              duration: Duration(milliseconds: 400),
+              transitionBuilder: (child, animation) {
+                return RotationTransition(
+                  turns: Tween(begin: 0.9, end: 1.0).animate(animation),
+                  child: child,
+                );
+              },
+              child: Icon(starStatus, key: ValueKey(isFavorite)),
+            ),
           ),
         ],
       ),
@@ -37,11 +50,14 @@ class MealDetailsScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.network(
-              meal.imageUrl,
-              width: double.infinity,
-              height: 300,
-              fit: BoxFit.cover,
+            Hero(
+              tag: meal.id,
+              child: Image.network(
+                meal.imageUrl,
+                width: double.infinity,
+                height: 300,
+                fit: BoxFit.cover,
+              ),
             ),
             SizedBox(height: 14),
             Expanded(
