@@ -19,11 +19,7 @@ class QuestionsSummary extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CustomIndex(
-                      ((data['question_index'] as int) + 1).toString(),
-                      data['user_answer'] == data['correct_answer']
-                          ? true
-                          : false),
+                  CustomIndex(((data['question_index'] as int) + 1).toString(), data['user_answer'] == data['correct_answer'] ? true : false),
                   const SizedBox(
                     width: 15,
                   ),
@@ -32,12 +28,9 @@ class QuestionsSummary extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        CustomTextWidget(data['question'] as String,
-                            const Color.fromARGB(255, 255, 243, 255), 14),
-                        CustomTextWidget(data['user_answer'] as String,
-                            const Color.fromARGB(255, 161, 8, 167), 12),
-                        CustomTextWidget(data['correct_answer'] as String,
-                            const Color.fromARGB(255, 101, 10, 205), 12)
+                        CustomTextWidget(data['question'] as String, const Color.fromARGB(255, 255, 243, 255), 14),
+                        CustomTextWidget(data['user_answer'] as String, const Color.fromARGB(255, 161, 8, 167), 12),
+                        CustomTextWidget(data['correct_answer'] as String, const Color.fromARGB(255, 101, 10, 205), 12)
                       ],
                     ),
                   ),
@@ -52,8 +45,7 @@ class QuestionsSummary extends StatelessWidget {
 }
 
 class CustomTextWidget extends StatelessWidget {
-  const CustomTextWidget(this.customText, this.customColor, this.customSize,
-      {super.key});
+  const CustomTextWidget(this.customText, this.customColor, this.customSize, {super.key});
 
   final String customText;
   final Color customColor;
@@ -83,17 +75,13 @@ class CustomIndex extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
       decoration: BoxDecoration(
-        color: answerValue == true
-            ? const Color.fromARGB(255, 136, 207, 242)
-            : const Color.fromARGB(255, 223, 103, 241),
+        color: answerValue == true ? const Color.fromARGB(255, 136, 207, 242) : const Color.fromARGB(255, 223, 103, 241),
         borderRadius: BorderRadius.circular(100),
       ),
       child: Text(
         customText,
         style: TextStyle(
-          color: answerValue == true
-              ? const Color.fromARGB(255, 43, 99, 127)
-              : const Color.fromARGB(255, 127, 34, 141),
+          color: answerValue == true ? const Color.fromARGB(255, 43, 99, 127) : const Color.fromARGB(255, 127, 34, 141),
           fontSize: 13,
           fontWeight: FontWeight.bold,
         ),
