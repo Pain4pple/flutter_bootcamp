@@ -20,6 +20,7 @@ class _ShoppingListState extends State<ShoppingList> {
   // final List<GroceryItem> groceryItems = dummyGroceryItems;
   List<GroceryItem> groceryItems = [];
   var isLoading = true;
+  String? errorMessage;
 
   void _addItem() {
     showDialog(
@@ -33,6 +34,19 @@ class _ShoppingListState extends State<ShoppingList> {
   void _loadItems() async {
     final url = Uri.https('shop-app-e0fdb-default-rtdb.firebaseio.com', 'shopping-list.json');
     final response = await http.get(url);
+    if (response.statusCode >= 400) {
+      setState(() {
+        errorMessage = "Failed to fetch data. Please try again later";
+        return;
+      });
+    }
+
+    if (response.body == 'null') {
+      setState(() {
+        isLoading = false;
+      });
+      return;
+    }
     final Map<String, dynamic> listData = json.decode(response.body);
     final List<GroceryItem> loadedGroceries = [];
     for (final item in listData.entries) {
@@ -92,7 +106,28 @@ class _ShoppingListState extends State<ShoppingList> {
 
   @override
   Widget build(BuildContext context) {
+    Widget content = Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text('Let\'s get started!', style: TextStyle(fontSize: 26, fontWeight: FontWeight.w600, color: const Color.fromARGB(255, 190, 186, 176))),
+        Text(
+          '\ntry adding items to your list! (≧ᗜ≦)',
+          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: const Color.fromARGB(255, 190, 186, 176)),
+        ),
+      ],
+    );
+
     final categoryList = categories.values.toList();
+
+    if (errorMessage != null) {
+      Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text('Uh oh!', style: TextStyle(fontSize: 26, fontWeight: FontWeight.w600, color: const Color.fromARGB(255, 190, 186, 176))),
+          Text(errorMessage.toString(), style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: const Color.fromARGB(255, 190, 186, 176))),
+        ],
+      );
+    }
     return Scaffold(
       appBar: CustomAppBar(),
       body: SafeArea(
