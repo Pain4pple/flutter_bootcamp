@@ -52,4 +52,56 @@ const questions = [
       'By calling updateState()',
     ],
   ),
+  Question(
+    'What is our Line Length standard for Dart code?',
+    [
+      '150',
+      '80',
+      '100',
+      '180',
+    ],
+  ),
+  Question(
+    'When a linter and formatter is installed, which of the following files SHOULD NOT be linted or formatted',
+    [
+      'Generated files',
+      'Interfaces',
+      'Data models',
+      'Widgets',
+    ],
+  ),
+  Question(
+    'What Flutter command checks the code if there are warnings or errors',
+    [
+      'flutter analyze',
+      'flutter doctor',
+      'flutter check',
+      'flutter codescan',
+    ],
+  ),
+  Question(
+    'True or False, auto code formatting should be turned on',
+    [
+      'True',
+      'False',
+    ],
+  ),
+  Question(
+    'What MacOS shortcut on VSCode is used to go to the VSCode Settings',
+    [
+      '⌘ + ,',
+      '⌘ + .',
+      '⌘ + \\',
+      '⌘ + ;',
+    ],
+  ),
+  Question(
+    'What MacOS shortcut on VSCode can you use to open the VSCode Command Palette',
+    [
+      '⌘+⇧+P',
+      '⌘+⇧+D',
+      '⌘+⇧+O',
+      '⌘+⇧+C',
+    ],
+  ),
 ];

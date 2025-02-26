@@ -31,12 +31,13 @@ class _QuizState extends State<Quiz> {
     }
   }
 
-  void restartQuiz(){
+  void restartQuiz() {
     setState(() {
-      selectedAnswers=[];
+      selectedAnswers = [];
       activeScreen = 'questions-screen';
     });
   }
+
   @override
   Widget build(BuildContext context) {
     Widget screenWidget = LandingPage(switchScreen);
@@ -45,17 +46,17 @@ class _QuizState extends State<Quiz> {
       screenWidget = QuestionsScreen(onSelectAnswer: chooseAnswer);
     }
     if (activeScreen == 'results-screen') {
-      screenWidget = ResultsScreen(restartQuiz, chosenAnswers: selectedAnswers,);
+      screenWidget = ResultsScreen(
+        restartQuiz,
+        chosenAnswers: selectedAnswers,
+      );
     }
     return MaterialApp(
       home: Scaffold(
           body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              Color.fromARGB(255, 162, 108, 215),
-              Color.fromARGB(255, 227, 180, 255)
-            ],
+            colors: [Color.fromARGB(255, 162, 108, 215), Color.fromARGB(255, 227, 180, 255)],
             begin: Alignment.topCenter,
             end: Alignment.bottomRight,
           ),

@@ -19,8 +19,7 @@ class LandingPage extends StatelessWidget {
           const SizedBox(
             height: 30,
           ),
-          const Text('Take this Flutter Quiz',
-              style: TextStyle(color: Color.fromARGB(147, 255, 255, 255), fontSize: 25)),
+          const Text('Take this Flutter Quiz', style: TextStyle(color: Color.fromARGB(147, 255, 255, 255), fontSize: 25)),
           const SizedBox(
             height: 20,
           ),
