@@ -12,6 +12,7 @@ enum Categories {
   grains,
   condiments,
   frozen,
+  hygiene,
 }
 
 class Category {
