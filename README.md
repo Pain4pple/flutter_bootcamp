@@ -4,21 +4,21 @@ This repository contains all the project outputs from the Udemy Course: Flutter 
 
 ## 📌 Projects Overview
 
-# 1️⃣ Roll Dice App 🎲
+### 1️⃣ Roll Dice App 🎲
 Generates random dice rolls using Flutter's built-in random number generator.
 
-# 2️⃣ Quiz App ❓
+### 2️⃣ Quiz App ❓
 Implements data models and structured data handling to display quiz questions and process user responses.
 
-# 3️⃣ Expenses Tracker App 💰
+### 3️⃣ Expenses Tracker App 💰
 Enables CRUD operations for managing expenses.
 Introduces UI theming and styling techniques.
 
-# 4️⃣ Meals App 🍽
+### 4️⃣ Meals App 🍽
 Implements state management using Riverpod.
 Features basic animations for enhanced user experience.
 
-# 5️⃣ Shop App 🛒
+### 5️⃣ Shop App 🛒
 Integrates Firebase for backend operations.
 Implements CRUD functionality for managing products.
 Showcases custom UI styling techniques.
