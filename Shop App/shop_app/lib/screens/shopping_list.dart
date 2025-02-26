@@ -32,32 +32,41 @@ class _ShoppingListState extends State<ShoppingList> {
   }
 
   void _loadItems() async {
-    final url = Uri.https('shop-app-e0fdb-default-rtdb.firebaseio.com', 'shopping-list.json');
-    final response = await http.get(url);
-    if (response.statusCode >= 400) {
-      setState(() {
-        errorMessage = "Failed to fetch data. Please try again later";
-        return;
-      });
-    }
+    try {
+      final url = Uri.https('shop-app-e0fdb-default-rtdb.firebaseio.com', 'shopping-list.json');
+      final response = await http.get(url);
+      if (response.statusCode >= 400) {
+        print(response.statusCode);
+        setState(() {
+          errorMessage = "Failed to fetch data. Please try again later";
+          isLoading = false;
+          return;
+        });
+      }
 
-    if (response.body == 'null') {
+      if (response.body == 'null') {
+        setState(() {
+          isLoading = false;
+        });
+        return;
+      }
+      final Map<String, dynamic> listData = json.decode(response.body);
+      final List<GroceryItem> loadedGroceries = [];
+      for (final item in listData.entries) {
+        final category = categories.entries.firstWhere((catItem) => catItem.value.title == item.value['category']).value;
+        loadedGroceries.add(GroceryItem(id: item.key, name: item.value['name'], quantity: item.value['quantity'], category: category));
+      }
+
       setState(() {
+        groceryItems = loadedGroceries;
         isLoading = false;
       });
-      return;
+    } catch (e) {
+      setState(() {
+        errorMessage = "Failed to fetch data. Please try again later.";
+        isLoading = false;
+      });
     }
-    final Map<String, dynamic> listData = json.decode(response.body);
-    final List<GroceryItem> loadedGroceries = [];
-    for (final item in listData.entries) {
-      final category = categories.entries.firstWhere((catItem) => catItem.value.title == item.value['category']).value;
-      loadedGroceries.add(GroceryItem(id: item.key, name: item.value['name'], quantity: item.value['quantity'], category: category));
-    }
-
-    setState(() {
-      groceryItems = loadedGroceries;
-      isLoading = false;
-    });
   }
 
   void _saveNewItem(GroceryItem groceryItem) async {
@@ -114,7 +123,7 @@ class _ShoppingListState extends State<ShoppingList> {
 
     final categoryList = categories.values.toList();
 
-    if (errorMessage != null) {
+    if (isLoading == false && errorMessage != null) {
       Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -169,23 +178,7 @@ class _ShoppingListState extends State<ShoppingList> {
                       padding: const EdgeInsets.all(20.0),
                       child:
                           groceryItems.isEmpty
-                              ? Container(
-                                color: const Color.fromARGB(255, 255, 251, 244),
-                                width: double.infinity,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Let\'s get started!',
-                                      style: TextStyle(fontSize: 26, fontWeight: FontWeight.w600, color: const Color.fromARGB(255, 190, 186, 176)),
-                                    ),
-                                    Text(
-                                      '\ntry adding items to your list! (≧ᗜ≦)',
-                                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: const Color.fromARGB(255, 190, 186, 176)),
-                                    ),
-                                  ],
-                                ),
-                              )
+                              ? Container(color: const Color.fromARGB(255, 255, 251, 244), width: double.infinity, child: content)
                               : Container(
                                 color: const Color.fromARGB(255, 255, 251, 244),
                                 child: ListView.builder(
