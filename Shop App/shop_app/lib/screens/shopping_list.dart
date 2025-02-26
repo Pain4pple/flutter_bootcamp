@@ -70,26 +70,21 @@ class _ShoppingListState extends State<ShoppingList> {
     // _loadItems;
   }
 
-  void _removeItem(GroceryItem item) {
+  void _removeItem(GroceryItem item) async {
     final itemIndex = groceryItems.indexOf(item);
-    setState(() {
-      groceryItems.remove(item);
-    });
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        duration: const Duration(seconds: 3),
-        content: const Text('Item removed'),
-        action: SnackBarAction(
-          label: 'Undo',
-          onPressed: () {
-            setState(() {
-              groceryItems.insert(itemIndex, item);
-            });
-          },
-        ),
-      ),
-    );
+    final url = Uri.https('shop-app-e0fdb-default-rtdb.firebaseio.com', 'shopping-list/${item.id}.json');
+    // final url = Uri.parse('https://shop-app-e0fdb-default-rtdb.firebaseio.com/shopping-list/${item.id}.json');
+    print(url);
+    final response = await http.delete(url);
+
+    if (response.statusCode >= 400) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(duration: Duration(seconds: 3), content: Text('Delete failed')));
+    } else {
+      setState(() {
+        groceryItems.removeAt(itemIndex);
+      });
+    }
   }
 
   List<GroceryItem> _filterItems(Category category) {
