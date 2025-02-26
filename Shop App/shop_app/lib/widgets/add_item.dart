@@ -74,16 +74,19 @@ class _AddItemState extends State<AddItem> {
                       Container(
                         padding: EdgeInsets.symmetric(
                           vertical: 8,
-                          horizontal: 14,
+                          horizontal: 10,
                         ),
                         decoration: BoxDecoration(
                           color: const Color.fromARGB(83, 255, 214, 64),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: TextFormField(
+                          style: TextStyle(fontSize: 14, color: Colors.black),
                           decoration: const InputDecoration(
                             hintText: 'e.g. lettuce, tortilla, apple...',
+                            hintStyle: TextStyle(fontSize: 10),
                             labelText: 'Name',
+                            labelStyle: TextStyle(fontSize: 15),
                             border: InputBorder.none,
                           ),
                           onSaved: (String? value) {
@@ -107,7 +110,7 @@ class _AddItemState extends State<AddItem> {
                             child: Container(
                               padding: EdgeInsets.symmetric(
                                 vertical: 8,
-                                horizontal: 14,
+                                horizontal: 10,
                               ),
                               decoration: BoxDecoration(
                                 color: const Color.fromARGB(83, 255, 214, 64),
@@ -115,8 +118,13 @@ class _AddItemState extends State<AddItem> {
                               ),
                               child: TextFormField(
                                 initialValue: '1',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black,
+                                ),
                                 decoration: const InputDecoration(
-                                  labelText: 'Quantity',
+                                  labelText: 'Qty',
+                                  labelStyle: TextStyle(fontSize: 15),
                                   border: InputBorder.none,
                                 ),
                                 keyboardType: TextInputType.numberWithOptions(),
@@ -142,7 +150,7 @@ class _AddItemState extends State<AddItem> {
                             child: Container(
                               padding: EdgeInsets.symmetric(
                                 vertical: 8,
-                                horizontal: 14,
+                                horizontal: 8,
                               ),
                               decoration: BoxDecoration(
                                 color: const Color.fromARGB(83, 255, 214, 64),
@@ -150,6 +158,10 @@ class _AddItemState extends State<AddItem> {
                               ),
                               child: DropdownButtonFormField(
                                 value: _selectedCategory,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black,
+                                ),
                                 decoration: const InputDecoration(
                                   labelText: 'Category',
                                   border: InputBorder.none,
