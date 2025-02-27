@@ -18,7 +18,7 @@ class Place {
 
   final String id;
   final String name;
-  final String description;
+  String? description;
   final String lat;
   final String long;
   final DateTime date;
