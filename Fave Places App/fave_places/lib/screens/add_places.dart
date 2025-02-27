@@ -44,9 +44,7 @@ class _AddPlacesState extends ConsumerState<AddPlaces> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // floatingActionButton: FloatingActionButton.extended(backgroundColor: ,onPressed: () {}, label: Icon(Icons.add, color: Colors.black54), shape: CircleBorder()),
       backgroundColor: const Color.fromARGB(255, 234, 234, 238),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(

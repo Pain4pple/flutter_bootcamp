@@ -10,7 +10,7 @@ List<Place> dummyPlaces = [
     lat: '14.5317306',
     long: '120.9826794',
     category: categories[Categories.beaches]!,
-    description: '',
+    description: 'Miming with whale sharks',
   ),
   Place(
     name: 'Sili Cafe',
