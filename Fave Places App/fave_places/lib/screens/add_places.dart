@@ -2,10 +2,13 @@ import 'package:fave_places/data/categories.dart';
 import 'package:fave_places/models/category.dart';
 import 'package:fave_places/models/place.dart';
 import 'package:fave_places/providers/place_provider.dart';
+import 'package:fave_places/widgets/image_input.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 class AddPlaces extends ConsumerStatefulWidget {
   const AddPlaces({super.key});
@@ -21,8 +24,10 @@ class _AddPlacesState extends ConsumerState<AddPlaces> {
   final TextEditingController imageController = TextEditingController();
   // final Category category;
 
+  File? _selectedImage;
+
   void _saveNewPlace() {
-    if (_formKey.currentState!.validate()) {
+    if (_formKey.currentState!.validate() && _selectedImage != null) {
       _formKey.currentState!.save();
 
       final newPlace = Place(
@@ -30,8 +35,7 @@ class _AddPlacesState extends ConsumerState<AddPlaces> {
         lat: '',
         long: '',
         date: DateTime.now(),
-        imageUrl:
-            'https://th.bing.com/th/id/R.2d5f600f952e0388aede88984ea738aa?rik=fKLX3cPTrvsP9A&riu=http%3a%2f%2fimages4.fanpop.com%2fimage%2fphotos%2f16900000%2fbeautiful-nature-random-16905868-1024-768.jpg&ehk=%2b7qBaRvZRy58oJbsp594Pm5vBaB5rxPgyF1ZHTt3fi4%3d&risl=&pid=ImgRaw&r=0',
+        imageUrl: _selectedImage!,
         category: categories[Categories.parks]!,
         description: descController.text,
       );
@@ -39,6 +43,10 @@ class _AddPlacesState extends ConsumerState<AddPlaces> {
       ref.read(userPlacesProvider.notifier).addPlace(newPlace);
       Navigator.of(context).pop();
     }
+  }
+
+  void takeImage(File image) {
+    _selectedImage = image;
   }
 
   @override
@@ -76,13 +84,7 @@ class _AddPlacesState extends ConsumerState<AddPlaces> {
                   ),
 
                   //camera field
-                  Container(
-                    height: 300,
-                    width: double.infinity,
-                    padding: EdgeInsets.all(30),
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: const Color.fromARGB(55, 127, 125, 136)),
-                    child: Icon(Icons.camera_alt_rounded),
-                  ),
+                  ImageInput(saveImage: takeImage),
                   SizedBox(height: 15),
 
                   //textfield label

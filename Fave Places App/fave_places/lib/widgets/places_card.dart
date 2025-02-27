@@ -20,7 +20,7 @@ class PlacesCard extends ConsumerWidget {
             height: 400,
             width: 300,
             decoration: BoxDecoration(
-              gradient: RadialGradient(colors: [Color(0xffF091F8), Color(0xffF55972)], center: Alignment.center, radius: 0.8),
+              // gradient: RadialGradient(colors: [Color(0xffF091F8), Color(0xffF55972)], center: Alignment.center, radius: 0.8),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Padding(
@@ -28,16 +28,24 @@ class PlacesCard extends ConsumerWidget {
               child: Stack(
                 fit: StackFit.expand,
                 children: [
-                  ClipRRect(borderRadius: BorderRadius.circular(16), child: Image.network(place.imageUrl, fit: BoxFit.cover)),
-                  Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [const Color.fromARGB(79, 35, 2, 31), const Color.fromARGB(0, 69, 7, 255)],
-                        end: Alignment.topCenter,
-                        begin: Alignment.bottomCenter,
-                        stops: [0.01, 0.9],
-                      ),
-                      borderRadius: BorderRadius.circular(20),
+                  Hero(
+                    tag: place.id,
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        ClipRRect(borderRadius: BorderRadius.circular(16), child: Image.file(place.imageUrl, fit: BoxFit.cover)),
+                        Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [const Color.fromARGB(79, 35, 2, 31), const Color.fromARGB(0, 69, 7, 255)],
+                              end: Alignment.topCenter,
+                              begin: Alignment.bottomCenter,
+                              stops: [0.01, 0.9],
+                            ),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   Positioned(

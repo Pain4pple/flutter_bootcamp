@@ -69,6 +69,7 @@ class PlacesScreen extends ConsumerWidget {
                   ),
                 ),
 
+                SizedBox(height: 15),
                 Row(
                   children: [
                     const Text('Favorite Places', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800, color: Color.fromARGB(255, 17, 9, 33))),
@@ -81,7 +82,6 @@ class PlacesScreen extends ConsumerWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 12),
                 // SizedBox(height: 25),
                 //extra buttons
                 Row(

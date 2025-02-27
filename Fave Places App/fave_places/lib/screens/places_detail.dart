@@ -31,7 +31,10 @@ class PlacesDetailScreen extends StatelessWidget {
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
-                    ClipRRect(borderRadius: BorderRadius.circular(34), child: Image.network(place.imageUrl, fit: BoxFit.cover)),
+                    Hero(
+                      tag: place.id,
+                      child: ClipRRect(borderRadius: BorderRadius.circular(34), child: Image.file(place.imageUrl, fit: BoxFit.cover)),
+                    ),
                     Positioned(
                       bottom: 20,
                       left: 20,

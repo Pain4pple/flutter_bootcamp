@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fave_places/models/category.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
@@ -22,7 +24,7 @@ class Place {
   final String lat;
   final String long;
   final DateTime date;
-  final String imageUrl;
+  final File imageUrl;
   final Category category;
 
   String get formattedDate {
