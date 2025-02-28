@@ -30,7 +30,7 @@ class _AddPlacesState extends ConsumerState<AddPlaces> {
         location: _selectedLocation!,
         date: DateTime.now(),
         imageUrl: _selectedImage!,
-        category: categories[Categories.parks]!,
+        // category: categories[Categories.parks]!,
         description: descController.text,
       );
       ref.read(userPlacesProvider.notifier).addPlace(newPlace);
