@@ -10,9 +10,14 @@ import 'package:google_fonts/google_fonts.dart';
 // );
 
 final theme = ThemeData().copyWith(
-  useMaterial3: true,
   // scaffoldBackgroundColor: colorScheme.background,
   // colorScheme: colorScheme,
+  progressIndicatorTheme: ProgressIndicatorThemeData(
+    color: const Color.fromARGB(221, 41, 35, 35), // Applies to all CircularProgressIndicator
+  ),
+  textSelectionTheme: TextSelectionThemeData(
+    cursorColor: const Color.fromARGB(221, 41, 35, 35), // Applies to all TextField cursors
+  ),
   textTheme: GoogleFonts.poppinsTextTheme().copyWith(
     titleSmall: GoogleFonts.poppins(fontWeight: FontWeight.bold),
     titleMedium: GoogleFonts.poppins(fontWeight: FontWeight.bold),

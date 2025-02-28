@@ -13,9 +13,16 @@ class ImageInput extends StatefulWidget {
 class _ImageInputState extends State<ImageInput> {
   File? _selectedImage;
 
-  void _takePicture() async {
+  void _takePicture(String source) async {
     final imagePicker = ImagePicker();
-    final pickedImage = await imagePicker.pickImage(source: ImageSource.camera, maxWidth: 600);
+    dynamic pickedImage;
+
+    if (source == 'camera') {
+      pickedImage = await imagePicker.pickImage(source: ImageSource.camera, maxWidth: 600);
+    } else {
+      pickedImage = await imagePicker.pickImage(source: ImageSource.gallery, maxWidth: 600);
+    }
+
     if (pickedImage == null) {
       return;
     }
@@ -28,18 +35,32 @@ class _ImageInputState extends State<ImageInput> {
 
   @override
   Widget build(BuildContext context) {
-    Widget content = Icon(Icons.camera_alt_rounded);
+    Widget content = Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        IconButton(
+          onPressed: () {
+            _takePicture('camera');
+          },
+          icon: Icon(Icons.camera_alt_rounded),
+        ),
+        Text('|'),
+        IconButton(
+          onPressed: () {
+            _takePicture('gallery');
+          },
+          icon: Icon(Icons.photo_library_rounded),
+        ),
+      ],
+    );
     if (_selectedImage != null) {
       content = ClipRRect(borderRadius: BorderRadius.circular(15), child: Image.file(_selectedImage!, fit: BoxFit.cover));
     }
-    return InkWell(
-      onTap: _takePicture,
-      child: Container(
-        height: 200,
-        width: double.infinity,
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: const Color.fromARGB(55, 127, 125, 136)),
-        child: content,
-      ),
+    return Container(
+      height: 200,
+      width: double.infinity,
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: const Color.fromARGB(55, 127, 125, 136)),
+      child: content,
     );
   }
 }

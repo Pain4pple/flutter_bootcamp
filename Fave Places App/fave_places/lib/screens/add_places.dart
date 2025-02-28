@@ -4,11 +4,8 @@ import 'package:fave_places/models/place.dart';
 import 'package:fave_places/providers/place_provider.dart';
 import 'package:fave_places/widgets/image_input.dart';
 import 'package:fave_places/widgets/location_input.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 class AddPlaces extends ConsumerStatefulWidget {
@@ -22,16 +19,12 @@ class _AddPlacesState extends ConsumerState<AddPlaces> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descController = TextEditingController();
-  final TextEditingController imageController = TextEditingController();
-  // final Category category;
-
   File? _selectedImage;
   PlaceLocation? _selectedLocation;
 
   void _saveNewPlace() {
     if (_formKey.currentState!.validate() && _selectedImage != null && _selectedLocation != null) {
       _formKey.currentState!.save();
-
       final newPlace = Place(
         name: nameController.text,
         location: _selectedLocation!,
@@ -40,7 +33,6 @@ class _AddPlacesState extends ConsumerState<AddPlaces> {
         category: categories[Categories.parks]!,
         description: descController.text,
       );
-
       ref.read(userPlacesProvider.notifier).addPlace(newPlace);
       Navigator.of(context).pop();
     }
@@ -61,10 +53,10 @@ class _AddPlacesState extends ConsumerState<AddPlaces> {
       child: Scaffold(
         backgroundColor: const Color.fromARGB(255, 234, 234, 238),
         body: Container(
-          height: MediaQuery.of(context).size.height,
+          height: double.infinity,
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Color.fromARGB(255, 234, 234, 238), Color.fromARGB(30, 232, 126, 55)],
+              colors: [Color.fromARGB(255, 234, 234, 238), Color.fromARGB(30, 244, 160, 104)],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
             ),
@@ -73,182 +65,48 @@ class _AddPlacesState extends ConsumerState<AddPlaces> {
             child: Padding(
               padding: const EdgeInsets.all(15.0),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  //header row
-                  Column(
-                    children: [
-                      Row(
-                        children: [
-                          const Text('Add a new', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w400, color: Color.fromARGB(255, 17, 9, 33))),
-                          const Text(' Place', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800, color: Color.fromARGB(255, 17, 9, 33))),
-                        ],
-                      ),
-                      SizedBox(height: 15),
+                  Row(
+                    children: const [
+                      Text('Add a new', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w400, color: Color.fromARGB(255, 17, 9, 33))),
+                      Text(' Place', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800, color: Color.fromARGB(255, 17, 9, 33))),
                     ],
                   ),
-
-                  //form starts here
-                  Expanded(
+                  SingleChildScrollView(
                     child: Form(
                       key: _formKey,
                       child: Column(
-                        mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          //camera field
+                          SizedBox(height: 15),
                           ImageInput(saveImage: takeImage),
                           SizedBox(height: 15),
-
-                          //textfield label
-                          Row(
-                            children: [
-                              const Text('Name', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: Color.fromARGB(255, 17, 9, 33))),
-                            ],
-                          ),
+                          _buildLabel('Name'),
+                          _buildTextField(nameController, 'e.g. Boracay'),
                           SizedBox(height: 12),
-
-                          //name textfield
-                          Row(
-                            children: [
-                              Flexible(
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                                  height: 50,
-                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: const Color.fromARGB(55, 127, 125, 136)),
-                                  child: TextFormField(
-                                    controller: nameController,
-                                    decoration: InputDecoration(
-                                      hintText: 'e.g. Boracay',
-                                      hintStyle: TextStyle(color: const Color.fromARGB(91, 0, 0, 0)),
-                                      border: InputBorder.none,
-                                    ),
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'This field cannot be empty';
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-
-                          //textfield label
+                          _buildLabel('Description'),
+                          _buildTextField(descController, 'e.g. loved the beaches in station 2'),
                           SizedBox(height: 12),
-                          Row(
-                            children: [
-                              const Text(
-                                'Description',
-                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: Color.fromARGB(255, 17, 9, 33)),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 12),
-
-                          //desc textfield
-                          Row(
-                            children: [
-                              Flexible(
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                                  height: 50,
-                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: const Color.fromARGB(55, 127, 125, 136)),
-                                  child: TextFormField(
-                                    controller: descController,
-                                    decoration: InputDecoration(
-                                      hintText: 'e.g. loved the beaches in station 2',
-                                      hintStyle: TextStyle(color: const Color.fromARGB(91, 0, 0, 0)),
-                                      border: InputBorder.none,
-                                    ),
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'This field cannot be empty';
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-
-                          //textfield label
-                          SizedBox(height: 12),
-                          Row(
-                            children: [
-                              const Text(
-                                'Location',
-                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: Color.fromARGB(255, 17, 9, 33)),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 12),
-
-                          //camera field
+                          _buildLabel('Location'),
                           LocationInput(getLocation: getLocation),
-
                           SizedBox(height: 25),
-
-                          //  //textfield label
-                          //   SizedBox(height: 12),
-                          //   Row(
-                          //     children: [
-                          //       const Text('Category', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: Color.fromARGB(255, 17, 9, 33))),
-                          //     ],
-                          //   ),
-                          //   SizedBox(height: 12),
-
-                          //   //desc textfield
-                          //   Row(
-                          //     children: [
-                          //       Flexible(
-                          //         child: Container(
-                          //           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                          //           height: 50,
-                          //           decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: const Color.fromARGB(55, 127, 125, 136)),
-                          //           child: DropdownButtonFormField(
-                          //            items: [
-
-                          //            ],
-                          //            onChanged: (value) {
-                          //              = value;
-                          //            },
-                          //            validator: (value) {
-                          //              if(value==null){
-                          //               return "Category is required";
-                          //              }
-                          //              return null;
-                          //            },
-                          //           ),
-                          //         ),
-                          //       ),
-                          //     ],
-                          //   ),
-                          //   SizedBox(height: 25),
-
-                          //extra buttons
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               ElevatedButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text('cancel'),
+                                onPressed: () => Navigator.of(context).pop(),
+                                child: Text('Cancel'),
                                 style: ButtonStyle(elevation: WidgetStateProperty.all(0)),
                               ),
                               SizedBox(width: 12),
                               ElevatedButton(
                                 onPressed: _saveNewPlace,
-                                child: Text('submit'),
+                                child: Text('Submit'),
                                 style: ButtonStyle(elevation: WidgetStateProperty.all(0)),
                               ),
                             ],
                           ),
-                          Spacer(),
+                          SizedBox(height: 20),
                         ],
                       ),
                     ),
@@ -258,6 +116,23 @@ class _AddPlacesState extends ConsumerState<AddPlaces> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildLabel(String text) {
+    return Row(children: [Text(text, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: Color.fromARGB(255, 17, 9, 33)))]);
+  }
+
+  Widget _buildTextField(TextEditingController controller, String hintText) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      height: 50,
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: const Color.fromARGB(55, 127, 125, 136)),
+      child: TextFormField(
+        controller: controller,
+        decoration: InputDecoration(hintText: hintText, hintStyle: TextStyle(color: const Color.fromARGB(91, 0, 0, 0)), border: InputBorder.none),
+        validator: (value) => value == null || value.isEmpty ? 'This field cannot be empty' : null,
       ),
     );
   }

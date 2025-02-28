@@ -8,6 +8,14 @@ class PlacesCard extends ConsumerWidget {
 
   final Place place;
 
+  String simplifyAddress(String fullAddress) {
+    List<String> parts = fullAddress.split(',');
+    if (parts.length >= 2) {
+      return "${parts[0]}, ${parts[1]}";
+    }
+    return fullAddress;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final goToFunc = ref.read(userPlacesProvider.notifier);
@@ -52,11 +60,16 @@ class PlacesCard extends ConsumerWidget {
                     bottom: 5,
                     left: 5,
                     child: Expanded(
-                      child: Row(
-                        children: [
-                          Padding(padding: const EdgeInsets.all(8.0), child: Text(place.name, style: TextStyle(color: Colors.white))),
-                          Icon(Icons.favorite, color: Colors.pink),
-                        ],
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(children: [Text(place.name, style: TextStyle(color: Colors.white)), Icon(Icons.favorite, color: Colors.pink)]),
+                            Text(simplifyAddress(place.location.address), style: TextStyle(color: Colors.white, fontSize: 12)),
+                          ],
+                        ),
                       ),
                     ),
                   ),

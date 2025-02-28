@@ -76,7 +76,7 @@ class _LocationInputState extends State<LocationInput> {
   Widget build(BuildContext context) {
     Widget content = Text("No location chosen", style: TextStyle(color: const Color.fromARGB(91, 0, 0, 0), fontSize: 17));
     if (_isGettingLocation != false) {
-      content = Align(alignment: Alignment.center, child: SizedBox(width: 30, height: 40, child: CircularProgressIndicator()));
+      content = Align(alignment: Alignment.center, child: SizedBox(width: 30, height: 30, child: CircularProgressIndicator()));
     }
     if (pickedLocation != null) {
       // var locationData = pickedLocation?.getLocation();
