@@ -14,6 +14,8 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
+  LatLng? _pickedLocation;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,12 +34,23 @@ class _MapScreenState extends State<MapScreen> {
                     splashColor: const Color.fromARGB(72, 109, 107, 102),
                     icon: Icon(Icons.arrow_back),
                   ),
-                  SizedBox(width: 12),
+                  const SizedBox(width: 12),
                   Text(
                     widget.isSelecting ? 'Choose ' : 'Your ',
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.w400, color: Color.fromARGB(255, 17, 9, 33)),
                   ),
-                  Text('location', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800, color: Color.fromARGB(255, 17, 9, 33))),
+                  const Text('location', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800, color: Color.fromARGB(255, 17, 9, 33))),
+                  const Spacer(),
+                  widget.isSelecting
+                      ? IconButton.filled(
+                        onPressed: () {
+                          Navigator.of(context).pop(_pickedLocation);
+                        },
+                        style: ButtonStyle(backgroundColor: WidgetStateProperty.all(const Color.fromARGB(139, 52, 44, 43))),
+                        splashColor: const Color.fromARGB(72, 109, 107, 102),
+                        icon: Icon(Icons.save),
+                      )
+                      : const Spacer(),
                 ],
               ),
             ),
@@ -48,8 +61,21 @@ class _MapScreenState extends State<MapScreen> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(34),
                   child: GoogleMap(
+                    onTap:
+                        widget.isSelecting == false
+                            ? null
+                            : (position) {
+                              setState(() {
+                                _pickedLocation = position;
+                              });
+                            },
                     initialCameraPosition: CameraPosition(target: LatLng(widget.location.lat, widget.location.long), zoom: 16),
-                    markers: {Marker(markerId: const MarkerId('m1'), position: LatLng(widget.location.lat, widget.location.long))},
+                    markers:
+                        (_pickedLocation == null && widget.isSelecting)
+                            ? {}
+                            : {
+                              Marker(markerId: const MarkerId('m1'), position: _pickedLocation ?? LatLng(widget.location.lat, widget.location.long)),
+                            },
                   ),
                 ),
               ),

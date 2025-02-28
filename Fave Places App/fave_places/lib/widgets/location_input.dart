@@ -1,9 +1,11 @@
 import 'dart:convert';
 
 import 'package:fave_places/models/place.dart';
+import 'package:fave_places/screens/map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
 
@@ -20,7 +22,19 @@ class _LocationInputState extends State<LocationInput> {
   var _isGettingLocation = false;
   String googleMapsApiKey = dotenv.env['GOOGLE_MAPS_API_KEY'] ?? '';
 
-  String get locationImage {
+  Future<void> _savePlace(double lat, double long) async {
+    final url = Uri.parse('https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$long&key=$googleMapsApiKey');
+    final response = await http.get(url);
+    final resData = jsonDecode(response.body);
+    final address = resData['results'][0]['formatted_address'];
+    setState(() {
+      pickedLocation = PlaceLocation(lat: lat, long: long, address: address);
+      _isGettingLocation = false;
+      widget.getLocation(pickedLocation!);
+    });
+  }
+
+  String get _locationImage {
     final lat = pickedLocation!.lat;
     final long = pickedLocation!.long;
     return 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$long&zoom=16&size=600x300&maptype=roadmap&markers=color:blue%7Clabel:S%7C$lat,$long&key=$googleMapsApiKey';
@@ -61,15 +75,16 @@ class _LocationInputState extends State<LocationInput> {
       return;
     }
 
-    final url = Uri.parse('https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$long&key=$googleMapsApiKey');
-    final response = await http.get(url);
-    final resData = jsonDecode(response.body);
-    final address = resData['results'][0]['formatted_address'];
-    setState(() {
-      pickedLocation = PlaceLocation(lat: lat, long: long, address: address);
-      _isGettingLocation = false;
-      widget.getLocation(pickedLocation!);
-    });
+    _savePlace(lat, long);
+  }
+
+  void _selectOnMap() async {
+    final pickedLocation = await Navigator.of(context).push<LatLng>(MaterialPageRoute(builder: (context) => const MapScreen()));
+
+    if (pickedLocation == null) {
+      return;
+    }
+    _savePlace(pickedLocation.latitude, pickedLocation.longitude);
   }
 
   @override
@@ -80,7 +95,7 @@ class _LocationInputState extends State<LocationInput> {
     }
     if (pickedLocation != null) {
       // var locationData = pickedLocation?.getLocation();
-      content = Image.network(locationImage, fit: BoxFit.cover, width: double.infinity, height: double.infinity);
+      content = Image.network(_locationImage, fit: BoxFit.cover, width: double.infinity, height: double.infinity);
     }
     return Column(
       children: [
@@ -98,7 +113,7 @@ class _LocationInputState extends State<LocationInput> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             TextButton.icon(onPressed: _getCurrentLocation, icon: const Icon(Icons.location_searching_sharp), label: Text('Current Location')),
-            TextButton.icon(onPressed: () {}, icon: const Icon(Icons.location_on_rounded), label: Text('Select Location')),
+            TextButton.icon(onPressed: _selectOnMap, icon: const Icon(Icons.location_on_rounded), label: Text('Select Location')),
           ],
         ),
       ],
