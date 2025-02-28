@@ -15,7 +15,7 @@ class PlacesDetailScreen extends StatelessWidget {
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color.fromARGB(255, 234, 234, 238), Color.fromARGB(30, 232, 126, 55)],
+            colors: [Color.fromARGB(255, 234, 234, 238), Color.fromARGB(30, 251, 224, 206)],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),

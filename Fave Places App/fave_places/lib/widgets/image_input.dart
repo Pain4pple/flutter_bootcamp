@@ -35,7 +35,7 @@ class _ImageInputState extends State<ImageInput> {
     return InkWell(
       onTap: _takePicture,
       child: Container(
-        height: 300,
+        height: 200,
         width: double.infinity,
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: const Color.fromARGB(55, 127, 125, 136)),
         child: content,
