@@ -1,10 +1,19 @@
 import 'package:fave_places/models/place.dart';
+import 'package:fave_places/screens/map.dart';
 import 'package:flutter/material.dart';
 
 class PlacesDetailScreen extends StatelessWidget {
   const PlacesDetailScreen({super.key, required this.place});
 
   final Place place;
+
+  String simplifyAddress(String fullAddress) {
+    List<String> parts = fullAddress.split(',');
+    if (parts.length >= 2) {
+      return "${parts[0]}, ${parts[1]}";
+    }
+    return fullAddress;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +47,24 @@ class PlacesDetailScreen extends StatelessWidget {
                     Positioned(
                       bottom: 20,
                       left: 20,
-                      child: Text(place.name, style: TextStyle(fontWeight: FontWeight.w700, color: Colors.white, fontSize: 30)),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(place.name, style: TextStyle(fontWeight: FontWeight.w700, color: Colors.white, fontSize: 30)),
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => MapScreen(location: place.location, isSelecting: false)),
+                              );
+                            },
+                            child: Text(
+                              simplifyAddress(place.location.address),
+                              style: TextStyle(fontWeight: FontWeight.w700, color: Colors.white, fontSize: 14),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
